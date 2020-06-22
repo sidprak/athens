@@ -2,6 +2,8 @@ build: off
 
 clone_folder: c:\gopath\src\github.com\gomods\athens
 
+image: Previous Visual Studio 2019
+
 environment:
   GOPATH: c:\gopath
   GO111MODULE: on
