@@ -20,7 +20,6 @@ func RunTests(t *testing.T, indexer index.Indexer, clearIndex func() error) {
 	var tests = []struct {
 		name    string
 		desc    string
-		since   time.Time
 		limit   int
 		preTest func(t *testing.T) ([]*index.Line, time.Time)
 	}{
@@ -55,19 +54,19 @@ func RunTests(t *testing.T, indexer index.Indexer, clearIndex func() error) {
 				if err != nil {
 					t.Fatal(err)
 				}
+				time.Sleep(50 * time.Millisecond)
 				now := time.Now()
 				lines := seed(t, indexer, 5)
 				return lines, now
 			},
-			since: time.Date(2003, 03, 05, 0, 0, 0, 0, time.UTC),
 			limit: 2000,
 		},
 		{
-			name:  "ignore the past",
-			desc:  "no line should be returned if 'since' is after all of the indexed modules",
-			since: time.Date(2003, 3, 8, 0, 0, 0, 0, time.UTC),
+			name: "ignore the past",
+			desc: "no line should be returned if 'since' is after all of the indexed modules",
 			preTest: func(t *testing.T) ([]*index.Line, time.Time) {
 				seed(t, indexer, 5)
+				time.Sleep(50 * time.Millisecond)
 				return []*index.Line{}, time.Now()
 			},
 			limit: 2000,
