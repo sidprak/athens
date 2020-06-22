@@ -10,7 +10,6 @@ import (
 	"github.com/gomods/athens/pkg/config"
 	"github.com/gomods/athens/pkg/errors"
 	"github.com/gomods/athens/pkg/index"
-	_ "github.com/lib/pq"
 )
 
 func New(cfg *config.MySQL) (index.Indexer, error) {
