@@ -7,10 +7,12 @@ import (
 	"strings"
 	"time"
 
+	// register the driver with database/sql
+	_ "github.com/lib/pq"
+
 	"github.com/gomods/athens/pkg/config"
 	"github.com/gomods/athens/pkg/errors"
 	"github.com/gomods/athens/pkg/index"
-	_ "github.com/lib/pq"
 )
 
 func New(cfg *config.Postgres) (index.Indexer, error) {
@@ -53,7 +55,7 @@ type indexer struct {
 }
 
 func (i *indexer) Index(ctx context.Context, mod, ver string) error {
-	const op errors.Op = "sql.Index"
+	const op errors.Op = "postgres.Index"
 	_, err := i.db.ExecContext(
 		ctx,
 		`INSERT INTO indexes (module, version, timestamp) VALUES ($1, $2, $3)`,
@@ -68,7 +70,7 @@ func (i *indexer) Index(ctx context.Context, mod, ver string) error {
 }
 
 func (i *indexer) Lines(ctx context.Context, since time.Time, limit int) ([]*index.Line, error) {
-	const op errors.Op = "sql.Lines"
+	const op errors.Op = "postgres.Lines"
 	if since.IsZero() {
 		since = time.Unix(0, 0)
 	}

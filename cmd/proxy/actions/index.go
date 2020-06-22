@@ -28,6 +28,10 @@ func indexHandler(index index.Indexer) http.HandlerFunc {
 		}
 		if sinceStr := r.FormValue("since"); sinceStr != "" {
 			since, err = time.Parse(time.RFC3339, sinceStr)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
 		}
 		if limit <= 0 {
 			limit = 2000

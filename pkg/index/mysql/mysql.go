@@ -22,14 +22,14 @@ func New(cfg *config.MySQL) (index.Indexer, error) {
 	if err = db.Ping(); err != nil {
 		return nil, err
 	}
-	_, err = db.Exec(mysqlTable)
+	_, err = db.Exec(schema)
 	if err != nil {
 		return nil, err
 	}
 	return &indexer{db}, nil
 }
 
-const mysqlTable = `
+const schema = `
 	CREATE TABLE IF NOT EXISTS indexes(
 	id INT
 		AUTO_INCREMENT
@@ -57,7 +57,7 @@ type indexer struct {
 }
 
 func (i *indexer) Index(ctx context.Context, mod, ver string) error {
-	const op errors.Op = "sql.Index"
+	const op errors.Op = "mysql.Index"
 	_, err := i.db.ExecContext(
 		ctx,
 		`INSERT INTO indexes (module, version, timestamp) VALUES (?, ?, ?)`,
@@ -72,7 +72,7 @@ func (i *indexer) Index(ctx context.Context, mod, ver string) error {
 }
 
 func (i *indexer) Lines(ctx context.Context, since time.Time, limit int) ([]*index.Line, error) {
-	const op errors.Op = "sql.Lines"
+	const op errors.Op = "mysql.Lines"
 	if since.IsZero() {
 		since = time.Unix(0, 0)
 	}
