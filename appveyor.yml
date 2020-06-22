@@ -11,5 +11,6 @@ environment:
 stack: go 1.14
 
 test_script:
+  - go version
   - go test ./...
 
